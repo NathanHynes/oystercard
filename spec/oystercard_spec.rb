@@ -8,7 +8,6 @@ describe Oystercard do
   end
 
   describe '#top_up' do
-
     it 'should allow user to add money to oystercard' do
       oyster.top_up(5)
       expect(oyster.balance).to eq 5
@@ -25,7 +24,7 @@ describe Oystercard do
 
     it 'should deduct money from oystercard' do
       oyster.top_up(10)
-      expect { oyster.deduct(5) }.to change { oyster.balance }.by -5
+      expect { oyster.deduct(5) }.to change { oyster.balance }.by(-5)
     end
   end
 
