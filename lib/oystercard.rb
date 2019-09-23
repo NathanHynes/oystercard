@@ -1,9 +1,9 @@
+# creates oystercards
 class Oystercard
   attr_reader :balance, :maximum, :journey
   DEFAULT_BALANCE = 0
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
-
 
   def initialize(balance = DEFAULT_BALANCE)
     @balance = balance
