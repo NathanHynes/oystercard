@@ -25,8 +25,31 @@ describe Oystercard do
 
     it 'should deduct money from oystercard' do
       oyster.top_up(10)
-      oyster.deduct(5)
-      expect(oyster.balance).to eq 5
+      expect { oyster.deduct(5) }.to change { oyster.balance }.by -5
+    end
+  end
+
+  describe '#touch_in' do
+    it 'should initial not be in a journey' do
+      expect(oyster).not_to be_in_journey
+    end
+
+    it 'should change journey status to true' do
+      oyster.touch_in
+      expect(oyster).to be_in_journey
+    end
+  end
+
+  describe '#touch_out' do
+
+    it 'should initial be in a journey' do
+      oyster.touch_in
+      expect(oyster).to be_in_journey
+    end
+
+    it 'should change journey status to false' do
+      oyster.touch_out
+      expect(oyster).not_to be_in_journey
     end
   end
 end
