@@ -14,7 +14,8 @@ describe Oystercard do
     end
 
     it "should raise error if over limit" do
-      expect { oyster.top_up(91) }.to raise_error "balance cannot exceed £#{oyster.maximum}"
+      oyster.top_up(90)
+      expect { oyster.top_up(1) }.to raise_error "balance cannot exceed £#{oyster.maximum}"
     end
   end
 
