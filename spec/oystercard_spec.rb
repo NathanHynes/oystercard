@@ -7,8 +7,12 @@ describe Oystercard do
     expect(oyster.balance).to eq 0
   end
 
-  it "should allow user to add money to oystercard" do
-    expect (oyster.top_up(5).balance).to eq 5
+  describe '#top_up' do
+    it "should allow user to add money to oystercard" do
+      oyster.top_up(5)
+      expect(oyster.balance).to eq 5
+    end
   end
+
 
 end
