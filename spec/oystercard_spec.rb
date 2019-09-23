@@ -28,6 +28,5 @@ describe Oystercard do
       oyster.deduct(5)
       expect(oyster.balance).to eq 5
     end
-
   end
 end
