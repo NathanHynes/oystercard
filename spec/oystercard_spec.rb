@@ -30,6 +30,8 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
+    before { oyster.top_up(Oystercard::MAXIMUM_BALANCE) }
+
     it 'should initial not be in a journey' do
       expect(oyster).not_to be_in_journey
     end
@@ -38,9 +40,14 @@ describe Oystercard do
       oyster.touch_in
       expect(oyster).to be_in_journey
     end
+
+    it "should raise error if card doesn't have minimum fare" do
+      expect { subject.touch_in }.to raise_error 'Insufficient balance to touch in'
+    end
   end
 
   describe '#touch_out' do
+    before { oyster.top_up(Oystercard::MAXIMUM_BALANCE) }
 
     it 'should initial be in a journey' do
       oyster.touch_in
