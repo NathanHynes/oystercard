@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# creates tube station
 class Station
   attr_reader :name, :zone
 
