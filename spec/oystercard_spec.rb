@@ -30,7 +30,7 @@ describe Oystercard do
 
     it 'should raise error if over limit' do
       oyster.top_up(Oystercard::MAXIMUM_BALANCE)
-      expect { oyster.top_up(1) }.to raise_error "balance cannot exceed £#{oyster.maximum}"
+      expect { oyster.top_up(Oystercard::MINIMUM_BALANCE) }.to raise_error "balance cannot exceed £#{oyster.maximum}"
     end
   end
 
