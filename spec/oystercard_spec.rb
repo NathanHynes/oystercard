@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'oystercard'
 
 describe Oystercard do
@@ -14,7 +16,7 @@ describe Oystercard do
     end
 
     it 'should raise error if over limit' do
-      oyster.top_up(oyster.maximum)
+      oyster.top_up(Oystercard::MAXIMUM_BALANCE)
       expect { oyster.top_up(1) }.to raise_error "balance cannot exceed £#{oyster.maximum}"
     end
   end
@@ -50,7 +52,7 @@ describe Oystercard do
     end
 
     it 'should charge the minimum amount' do
-      expect {oyster.touch_out}.to change{oyster.balance}.by(-Oystercard::MINIMUM_BALANCE)
+      expect { oyster.touch_out }.to change { oyster.balance }.by(-Oystercard::MINIMUM_BALANCE)
     end
   end
 end
