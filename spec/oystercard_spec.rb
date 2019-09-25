@@ -19,15 +19,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'should deduct money from oystercard' do
-      oyster.top_up(10)
-      expect { oyster.deduct(5) }.to change { oyster.balance }.by(-5)
-    end
-  end
-
   describe '#touch_in' do
     before { oyster.top_up(Oystercard::MAXIMUM_BALANCE) }
 
@@ -56,6 +47,10 @@ describe Oystercard do
     it 'should change journey status to false' do
       oyster.touch_out
       expect(oyster).not_to be_in_journey
+    end
+
+    it 'should charge the minimum amount' do
+      expect {oyster.touch_out}.to change{oyster.balance}.by(-Oystercard::MINIMUM_BALANCE)
     end
   end
 end
