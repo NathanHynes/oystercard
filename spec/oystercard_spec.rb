@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 require 'oystercard'
+require 'journey'
+require 'station'
 
 describe Oystercard do
   let(:oyster) { Oystercard.new }
   let(:station_a) { double :station }
   let(:station_b) { double :station }
+  let(:journey) { double :journey, fare: 1 }
 
   it 'should have a default balance of 0' do
     expect(oyster.balance).to eq 0
@@ -42,14 +45,6 @@ describe Oystercard do
 
     it { is_expected.to respond_to(:touch_in).with(1).argument }
 
-    it 'should initially not be in a journey' do
-      expect(subject).not_to be_in_journey
-    end
-
-    it 'should change journey status to true' do
-      expect(oyster).to be_in_journey
-    end
-
     it "should raise error if card doesn't have minimum fare" do
       expect { subject.touch_in(station_a) }.to raise_error 'Insufficient balance to touch in'
     end
@@ -63,18 +58,10 @@ describe Oystercard do
     before do
       oyster.top_up(Oystercard::MAXIMUM_BALANCE)
       oyster.touch_in(station_a)
+      allow(journey).to receive(:complete?).and_return true
     end
 
     it { is_expected.to respond_to(:touch_out).with(1).argument }
-
-    it 'should initial be in a journey' do
-      expect(oyster).to be_in_journey
-    end
-
-    it 'should change journey status to false' do
-      oyster.touch_out(station_b)
-      expect(oyster).not_to be_in_journey
-    end
 
     it 'should charge the minimum amount' do
       expect { oyster.touch_out(station_b) }.to change { oyster.balance }.by(-Oystercard::MINIMUM_BALANCE)
@@ -82,26 +69,6 @@ describe Oystercard do
 
     it 'changes entry station to nil' do
       expect { oyster.touch_out(station_b) }.to change { oyster.entry_station }.to eq nil
-    end
-
-    it 'should record exit station' do
-      oyster.touch_out(station_b)
-      expect(oyster.exit_station).to eq station_b
-    end
-
-    it 'saves journey' do
-      oyster.touch_out(station_b)
-      expect(oyster.journey_history).to eq [{ station_a => station_b }]
-    end
-  end
-  describe '#show_journey_history' do
-    before do
-      oyster.top_up(Oystercard::MINIMUM_BALANCE)
-      oyster.touch_in(station_a)
-      oyster.touch_out(station_b)
-    end
-    it 'shows journey history' do
-      expect(oyster.show_journey_history).to eq ["#{station_a} ---> #{station_b}"]
     end
   end
 end
