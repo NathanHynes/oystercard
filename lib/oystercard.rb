@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require_relative 'random_station'
+require_relative 'station'
 
 # creates oystercards
 class Oystercard
