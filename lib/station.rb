@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 require_relative 'random_station'
 
-# creates tube station
 class Station
   attr_reader :name, :zone
 
-  include RandomStation
+  # include RandomStation
 
-  def initialize
-    select_station
-    @name = station_name
-    @zone = station_zone
+  def initialize(info = RandomStation.new.select_station)
+    @name = info[:name]
+    @zone = info[:zone]
   end
 end

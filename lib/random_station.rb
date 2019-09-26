@@ -2,23 +2,23 @@
 
 require 'csv'
 
-module RandomStation
-  attr_reader :random_station
+class RandomStation
+  def initialize(filename = 'stations.csv')
+    @filename = filename
+  end
 
-  def select_station(filename = 'stations.csv')
-    stations = []
+  def select_station
+    stations.sample
+  end
+
+  attr_reader :filename, :list
+
+  def stations
+    list = []
     CSV.foreach(filename) do |line|
-      station, zone = line
-      stations << { station: station, zone: zone }
+      name, zone = line
+      list << { name: name, zone: zone }
     end
-    @random_station = stations.sample
-  end
-
-  def station_name
-    random_station[:station].to_s
-  end
-
-  def station_zone
-    random_station[:zone].to_i
+    list
   end
 end
