@@ -1,30 +1,29 @@
 # frozen_string_literal: true
 
 require 'journey'
+require 'station'
 describe Journey do
   let(:card) { double :oystercard }
-  let(:station_a) { double :station }
-  let(:station_b) { double :station }
+  let(:station_a) { double :station, zone: 1 }
+  let(:station_b) { double :station, zone: 2 }
 
-  # describe '#start' do
-  #   it {is_expected.to respond_to(:start).with(1).argument}
+  describe '#start' do
+    it { is_expected.to respond_to(:start).with(1).argument }
 
-  #   it 'stores entry station' do
-  #     subject.start(station_a)
-  #     expect(subject.route[:entry]).to eq station_a
-  #   end
+    it 'stores entry station' do
+      subject.start(station_a)
+      expect(subject.current_route[:entry]).to eq station_a
+    end
+  end
 
-  # end
+  describe '#finish' do
+    it { is_expected.to respond_to(:finish).with(1).argument }
 
-  # describe '#finish' do
-  # it {is_expected.to respond_to(:finish).with(1).argument}
-
-  # it 'stores exit station' do
-  #   subject.finish(station_b)
-  #   expect(subject.route[:exit]).to eq station_b
-  # end
-
-  # end
+    it 'stores exit station' do
+      subject.finish(station_b)
+      expect(subject.current_route[:exit]).to eq station_b
+    end
+  end
 
   describe '#complete' do
     it 'returns true if the journey is complete' do

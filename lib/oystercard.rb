@@ -30,6 +30,7 @@ class Oystercard
   def touch_in(entry_station)
     raise 'Insufficient balance to touch in' unless minimum_balance?
 
+    deduct(journey.fare) && journey.journeylog.save_journey unless journey.current_route[:entry].nil?
     journey.start(entry_station)
     @entry_station = entry_station
   end
@@ -42,13 +43,7 @@ class Oystercard
   end
 
   def show_journey_history
-    log = []
-    journey_history.each do |array|
-      array.each do |entry, exit|
-        log << "#{entry} ---> #{exit}"
-      end
-    end
-    log
+    @journey.journeylog.show_history
   end
 
   private

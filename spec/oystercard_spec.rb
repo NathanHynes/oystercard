@@ -6,8 +6,8 @@ require 'station'
 
 describe Oystercard do
   let(:oyster) { Oystercard.new }
-  let(:station_a) { double :station }
-  let(:station_b) { double :station }
+  let(:station_a) { double :station, zone: 1 }
+  let(:station_b) { double :station, zone: 2 }
   let(:journey) { double :journey, fare: 1 }
 
   it 'should have a default balance of 0' do
