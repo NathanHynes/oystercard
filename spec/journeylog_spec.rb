@@ -1,11 +1,8 @@
 # frozen_string_literal: true
-
-#need to include a test for being empty on initialize
-
 require 'journeylog'
 describe JourneyLog do
-  let(:station_a) { double :station }
-  let(:station_b) { double :station }
+  let(:station_a) { double :station, zone: 1 }
+  let(:station_b) { double :station, zone: 2 }
 
   describe '#start' do
     it { is_expected.to respond_to(:start).with(1).argument }
@@ -29,16 +26,15 @@ describe JourneyLog do
     it 'shows journey history' do
       subject.start(station_a)
       subject.finish(station_b)
-      subject.save_journey
       expect(subject.show_history).to eq ["#{station_a} ---> #{station_b}"]
     end
   end
 
   describe '#save_journey' do
-    it 'saves the last journey' do
+    it 'adds journey to journey list' do
       subject.start(station_a)
       subject.finish(station_b)
-      expect(subject.save_journey).to eq [{ entry: station_a, exit: station_b }]
+      expect(subject.journeys).to eq [{ entry: station_a, exit: station_b }]
     end
   end
 end

@@ -1,31 +1,40 @@
 # frozen_string_literal: true
 
-class JourneyLog
-  attr_reader :route
+require_relative 'journey'
 
-  def initialize
+
+class JourneyLog
+  attr_reader :route, :journeys
+
+  def initialize(journey = Journey.new)
+    @current_route = journey
     @route = { entry: nil, exit: nil }
-    @last_journey = []
+    @journeys = []
   end
 
   def start(entry_station)
-    route[:entry] = entry_station
+    @current_route.start(entry_station)
+    @route[:entry] = entry_station
   end
 
   def finish(exit_station)
-    route[:exit] = exit_station
+    @route[:exit] = exit_station
+    save_journey
+    @current_route.finish(exit_station)
+  end
+
+  def fare
+    @current_route.fare
   end
 
   def save_journey
-
-    @last_journey << @route
-    @route = { entry: nil, exit: nil }
-    @last_journey
+    @journeys.push(@route)
+    # @route = { entry: nil, exit: nil }
   end
 
   def show_history
     log = []
-    @last_journey.each do |hash|
+    @journeys.each do |hash|
       log << "#{hash[:entry]} ---> #{hash[:exit]}"
     end
     log

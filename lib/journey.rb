@@ -1,48 +1,31 @@
 require_relative 'oystercard'
-require_relative 'station'
-require_relative 'journeylog'
 
 class Journey
   MINIMUM_FARE = 1
   PENALTY_FARE = 6
 
-  attr_reader :current_route, :penalty, :journeylog
+  attr_reader :entry_station, :exit_station
 
-  def initialize(journey_log = JourneyLog.new)
-    @current_route = { entry: nil, exit: nil }
-    @penalty = PENALTY_FARE
-    @journeylog = journey_log
+  def initialize
+    @entry_station = nil
+    @exit_station = nil
   end
 
   def start(entry_station)
-    zone_on_entry(entry_station)
-    @current_route[:entry] = entry_station
-    journeylog.start(entry_station)
+    @entry_station = entry_station
   end
 
   def finish(exit_station)
-    zone_on_exit(exit_station)
-    @current_route[:exit] = exit_station
-    journeylog.finish(exit_station)
+    @exit_station = exit_station
   end
 
   def complete?
-    !@journeylog.route.value?(nil)
+    !!@entry_station && !!@exit_station
   end
 
   def fare
     return PENALTY_FARE unless complete?
 
-    MINIMUM_FARE
-  end
-
-  private
-
-  def zone_on_entry(entry_station)
-    @entry_zone = entry_station.zone
-  end
-
-  def zone_on_exit(exit_station)
-    @exit_zone = exit_station.zone
+    (entry_station.zone.to_i - exit_station.zone.to_i).abs + MINIMUM_FARE
   end
 end

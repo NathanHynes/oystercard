@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
 require_relative 'station'
-require_relative 'journey'
+require_relative 'journeylog'
 
 # creates oystercards
 class Oystercard
-  attr_reader :balance, :maximum, :journey, :entry_station, :exit_station, :journey
+  attr_reader :balance, :maximum, :journeylog, :entry_station, :exit_station, :journey
   DEFAULT_BALANCE = 0
   MAXIMUM_BALANCE = 90
   MINIMUM_BALANCE = 1
 
-  def initialize
+  def initialize(journeylog = JourneyLog.new)
     @balance = DEFAULT_BALANCE
     @maximum = MAXIMUM_BALANCE
-    @journey
+    @journeylog = journeylog
   end
 
   def show_balance
@@ -29,21 +29,21 @@ class Oystercard
   def touch_in(entry_station)
     raise 'Insufficient balance to touch in' unless minimum_balance?
 
-    # refactor to maybe call journey.finish("incomplete") will need to add save method to journey?
-    deduct(journey.fare) && journey.journeylog.save_journey unless journey.current_route[:entry].nil?
-    journey.start(entry_station)
+    # refactor to maybe call journeylog save method
+    deduct(journeylog.fare) unless journeylog.route[:entry].nil?
+    journeylog.start(entry_station)
     @entry_station = entry_station
   end
 
   def touch_out(exit_station)
-    journey.finish(exit_station)
-    deduct(journey.fare)
-    @exit_station = exit_station
+    journeylog.finish(exit_station)
+    deduct(journeylog.fare)
     @entry_station = nil
+    @exit_station = exit_station
   end
 
   def show_journey_history
-    @journey.journeylog.show_history.dub
+    journeylog.show_history.dup
   end
 
   private

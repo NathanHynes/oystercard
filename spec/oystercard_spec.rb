@@ -3,11 +3,12 @@
 require 'oystercard'
 require 'journey'
 require 'station'
+require 'journeylog'
 
 describe Oystercard do
   let(:oyster) { Oystercard.new }
   let(:station_a) { double :station, zone: 1 }
-  let(:station_b) { double :station, zone: 2 }
+  let(:station_b) { double :station, zone: 1 }
   let(:journey) { double :journey, fare: 1 }
 
   it 'should have a default balance of 0' do
@@ -48,6 +49,11 @@ describe Oystercard do
     it 'should record entry station' do
       expect(oyster.entry_station).to eq station_a
     end
+
+    it 'charges penalty if touch in twice' do
+      oyster.touch_in(station_a)
+      expect { oyster.touch_in(station_b)}.to change { oyster.balance}.by -6
+    end
   end
 
   describe '#touch_out' do
@@ -59,7 +65,7 @@ describe Oystercard do
 
     it { is_expected.to respond_to(:touch_out).with(1).argument }
 
-    it 'should charge the minimum amount' do
+    it 'should charge the card by £1 if traveling across the same zone' do
       expect { oyster.touch_out(station_b) }.to change { oyster.balance }.by(-Oystercard::MINIMUM_BALANCE)
     end
 

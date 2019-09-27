@@ -5,14 +5,15 @@ require 'station'
 describe Journey do
   let(:card) { double :oystercard }
   let(:station_a) { double :station, zone: 1 }
-  let(:station_b) { double :station, zone: 2 }
+  let(:station_b) { double :station, zone: 1 }
+  let(:station_c) { double :station, zone: 3 }
 
   describe '#start' do
     it { is_expected.to respond_to(:start).with(1).argument }
 
     it 'stores entry station' do
       subject.start(station_a)
-      expect(subject.current_route[:entry]).to eq station_a
+      expect(subject.entry_station).to eq station_a
     end
   end
 
@@ -21,7 +22,7 @@ describe Journey do
 
     it 'stores exit station' do
       subject.finish(station_b)
-      expect(subject.current_route[:exit]).to eq station_b
+      expect(subject.exit_station).to eq station_b
     end
   end
 
@@ -39,10 +40,16 @@ describe Journey do
   end
 
   describe '#fare' do
-    it 'charges minimum fare if journey complete' do
+    it 'charges minimum fare if journey is across one zone' do
       subject.start(station_a)
       subject.finish(station_b)
       expect(subject.fare).to be(Journey::MINIMUM_FARE)
+    end
+
+    it 'calculates fare travelling within different journey' do
+      subject.start(station_a)
+      subject.finish(station_c)
+      expect(subject.fare).to be 3
     end
 
     it 'charges penalty fare if journey is incomplete' do
