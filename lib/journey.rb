@@ -8,10 +8,10 @@ class Journey
 
   attr_reader :current_route, :penalty, :journeylog
 
-  def initialize
+  def initialize(journey_log = JourneyLog.new)
     @current_route = { entry: nil, exit: nil }
     @penalty = PENALTY_FARE
-    @journeylog = JourneyLog.new
+    @journeylog = journey_log
   end
 
   def start(entry_station)

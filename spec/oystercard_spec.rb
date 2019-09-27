@@ -14,10 +14,6 @@ describe Oystercard do
     expect(oyster.balance).to eq 0
   end
 
-  it 'initialises a new card with no journey history' do
-    expect(subject.journey_history).to be_empty
-  end
-
   describe '#show_balance' do
     it 'shows balance' do
       subject.top_up(10)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+#need to include a test for being empty on initialize
+
 require 'journeylog'
 describe JourneyLog do
   let(:station_a) { double :station }
